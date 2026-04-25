@@ -4,15 +4,20 @@ import Projects from "@/components/Projects";
 import Together from "@/components/Together";
 import Photos from "@/components/Photos";
 import Closing from "@/components/Closing";
+import { getProjects, getPhotos } from "@/lib/notion";
 
-export default function Home() {
+export const revalidate = 3600;
+
+export default async function Home() {
+  const [projects, photos] = await Promise.all([getProjects(), getPhotos()]);
+
   return (
     <main>
       <Hero />
       <Story />
-      <Projects />
+      <Projects projects={projects} />
       <Together />
-      <Photos />
+      <Photos photos={photos} />
       <Closing />
     </main>
   );

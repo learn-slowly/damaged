@@ -1,5 +1,6 @@
 "use client";
 
+import { type NotionPhoto } from "@/lib/notion";
 import { useScrollReveal, useScrollRevealMultiple } from "@/hooks/useScrollReveal";
 
 const introLines = [
@@ -8,10 +9,11 @@ const introLines = [
   "그렇게 주운 것들이다.",
 ];
 
-// placeholder — 사진 추가 시 여기에 경로 추가
-const photos: string[] = [];
+interface PhotosProps {
+  photos: NotionPhoto[];
+}
 
-export default function Photos() {
+export default function Photos({ photos }: PhotosProps) {
   const titleRef = useScrollReveal<HTMLHeadingElement>(0.3);
   const setRef = useScrollRevealMultiple(0.3);
 
@@ -37,17 +39,16 @@ export default function Photos() {
       </div>
       {photos.length > 0 && (
         <div className="grid w-full max-w-[1000px] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {photos.map((src, i) => (
+          {photos.map((photo, i) => (
             <div
-              key={i}
+              key={photo.id}
               ref={setRef(introLines.length + i)}
               className="reveal aspect-square overflow-hidden rounded-lg bg-card-bg"
               style={{ transitionDelay: `${(introLines.length + i) * 150}ms` }}
             >
-              {/* Next Image로 교체 예정 */}
               <img
-                src={src}
-                alt=""
+                src={photo.imageUrl}
+                alt={photo.title || photo.description || ""}
                 className="h-full w-full object-cover"
                 loading="lazy"
               />

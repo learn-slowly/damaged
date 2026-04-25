@@ -1,6 +1,6 @@
 "use client";
 
-import { projects } from "@/data/projects";
+import { type NotionProject } from "@/lib/notion";
 import ProjectCard from "./ProjectCard";
 import { useScrollReveal, useScrollRevealMultiple } from "@/hooks/useScrollReveal";
 
@@ -11,7 +11,11 @@ const introLines = [
   "하나 하나 물어가며 필요한 것들을 만들었다.",
 ];
 
-export default function Projects() {
+interface ProjectsProps {
+  projects: NotionProject[];
+}
+
+export default function Projects({ projects }: ProjectsProps) {
   const titleRef = useScrollReveal<HTMLHeadingElement>(0.3);
   const setIntroRef = useScrollRevealMultiple(0.3);
   const setCardRef = useScrollRevealMultiple(0.3);
