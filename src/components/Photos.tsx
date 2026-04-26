@@ -1,6 +1,7 @@
 "use client";
 
-import { type PhotoChapter } from "@/lib/notion";
+import { useEffect, useState } from "react";
+import { type NotionPhoto, type PhotoChapter } from "@/lib/notion";
 import { useScrollReveal, useScrollRevealMultiple } from "@/hooks/useScrollReveal";
 
 const introLines = [
@@ -29,12 +30,115 @@ function caption(date: string, location: string) {
   return [d, location].filter(Boolean).join(" ");
 }
 
+interface ViewerState {
+  chapterIdx: number;
+  photoIdx: number;
+}
+
+function Lightbox({
+  chapters,
+  state,
+  onClose,
+  onNavigate,
+}: {
+  chapters: PhotoChapter[];
+  state: ViewerState;
+  onClose: () => void;
+  onNavigate: (delta: number) => void;
+}) {
+  const photos = chapters[state.chapterIdx].photos;
+  const photo = photos[state.photoIdx];
+  const cap = caption(photo.date, photo.location);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      else if (e.key === "ArrowLeft") onNavigate(-1);
+      else if (e.key === "ArrowRight") onNavigate(1);
+    };
+    window.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [onClose, onNavigate]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex flex-col bg-black/95 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      onClick={onClose}
+    >
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="닫기"
+        className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center text-2xl font-light text-foreground hover:text-foreground-strong"
+      >
+        ×
+      </button>
+      {state.photoIdx > 0 && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onNavigate(-1);
+          }}
+          aria-label="이전 사진"
+          className="absolute left-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center text-3xl font-light text-foreground hover:text-foreground-strong"
+        >
+          ‹
+        </button>
+      )}
+      {state.photoIdx < photos.length - 1 && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onNavigate(1);
+          }}
+          aria-label="다음 사진"
+          className="absolute right-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center text-3xl font-light text-foreground hover:text-foreground-strong"
+        >
+          ›
+        </button>
+      )}
+      <div className="flex flex-1 items-center justify-center p-4 sm:p-12">
+        <img
+          src={photo.imageUrl}
+          alt={photo.title || photo.description || ""}
+          className="max-h-full max-w-full cursor-zoom-out object-contain"
+        />
+      </div>
+      {cap && (
+        <div className="pb-6 text-center text-xs font-light text-accent">
+          {cap}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Photos({ chapters }: PhotosProps) {
   const titleRef = useScrollReveal<HTMLHeadingElement>(0.3);
   const setRef = useScrollRevealMultiple(0.3);
+  const [viewer, setViewer] = useState<ViewerState | null>(null);
 
   let revealIndex = 0;
   const nextRef = () => setRef(revealIndex++);
+
+  const navigate = (delta: number) => {
+    setViewer((v) => {
+      if (!v) return v;
+      const photos = chapters[v.chapterIdx].photos;
+      const next = v.photoIdx + delta;
+      if (next < 0 || next >= photos.length) return v;
+      return { ...v, photoIdx: next };
+    });
+  };
 
   return (
     <section className="flex flex-col items-center px-6 py-24">
@@ -58,7 +162,7 @@ export default function Photos({ chapters }: PhotosProps) {
       </div>
 
       <div className="w-full max-w-[1000px] space-y-32">
-        {chapters.map(({ chapter, photos }) => {
+        {chapters.map(({ chapter, photos }, chapterIdx) => {
           const { number, title } = splitChapter(chapter);
           return (
             <div key={chapter} className="space-y-8">
@@ -70,17 +174,26 @@ export default function Photos({ chapters }: PhotosProps) {
                   {title}
                 </h3>
               </div>
-              <div className="grid grid-cols-1 gap-x-4 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-                {photos.map((photo) => (
-                  <figure key={photo.id} ref={nextRef()} className="reveal">
-                    <div className="aspect-square overflow-hidden rounded-lg bg-card-bg">
+              <div className="columns-1 gap-4 sm:columns-2 lg:columns-3">
+                {photos.map((photo, photoIdx) => (
+                  <figure
+                    key={photo.id}
+                    ref={nextRef()}
+                    className="reveal mb-10 break-inside-avoid"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setViewer({ chapterIdx, photoIdx })}
+                      className="block w-full cursor-zoom-in overflow-hidden rounded-lg bg-card-bg transition-opacity hover:opacity-90"
+                      aria-label={`${photo.title || "사진"} 크게 보기`}
+                    >
                       <img
                         src={photo.imageUrl}
                         alt={photo.title || photo.description || ""}
-                        className="h-full w-full object-cover"
+                        className="block h-auto w-full"
                         loading="lazy"
                       />
-                    </div>
+                    </button>
                     {caption(photo.date, photo.location) && (
                       <figcaption className="mt-2 text-xs font-light text-accent">
                         {caption(photo.date, photo.location)}
@@ -93,6 +206,15 @@ export default function Photos({ chapters }: PhotosProps) {
           );
         })}
       </div>
+
+      {viewer && (
+        <Lightbox
+          chapters={chapters}
+          state={viewer}
+          onClose={() => setViewer(null)}
+          onNavigate={navigate}
+        />
+      )}
     </section>
   );
 }
