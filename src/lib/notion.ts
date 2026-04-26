@@ -17,7 +17,14 @@ export interface NotionPhoto {
   title: string;
   imageUrl: string;
   description: string;
+  location: string;
+  date: string;
   order: number;
+}
+
+export interface PhotoChapter {
+  chapter: string;
+  photos: NotionPhoto[];
 }
 
 function getPropertyValue(property: any): any {
@@ -32,6 +39,8 @@ function getPropertyValue(property: any): any {
       return property.checkbox;
     case "number":
       return property.number ?? 0;
+    case "select":
+      return property.select?.name ?? "";
     case "multi_select":
       return property.multi_select.map((s: any) => s.name);
     case "files":
@@ -46,13 +55,13 @@ function getPropertyValue(property: any): any {
 }
 
 export async function getProjects(): Promise<NotionProject[]> {
-  const response = await (notion as any).dataSources.query({
-    data_source_id: process.env.NOTION_PROJECTS_DS!,
-    filter: { property: "공개", checkbox: { equals: true } },
-    sorts: [{ property: "순서", direction: "ascending" }],
-  });
+  const results = await queryAll(
+    process.env.NOTION_PROJECTS_DS!,
+    { property: "공개", checkbox: { equals: true } },
+    [{ property: "순서", direction: "ascending" }]
+  );
 
-  return response.results.map((page: any) => ({
+  return results.map((page: any) => ({
     id: page.id,
     title: getPropertyValue(page.properties["제목"]),
     description: getPropertyValue(page.properties["설명"]),
@@ -63,18 +72,50 @@ export async function getProjects(): Promise<NotionProject[]> {
   }));
 }
 
-export async function getPhotos(): Promise<NotionPhoto[]> {
-  const response = await (notion as any).dataSources.query({
-    data_source_id: process.env.NOTION_PHOTOS_DS!,
-    filter: { property: "공개", checkbox: { equals: true } },
-    sorts: [{ property: "순서", direction: "ascending" }],
-  });
+async function queryAll(dataSourceId: string, filter: any, sorts: any[]) {
+  const all: any[] = [];
+  let cursor: string | undefined;
+  do {
+    const response = await (notion as any).dataSources.query({
+      data_source_id: dataSourceId,
+      filter,
+      sorts,
+      start_cursor: cursor,
+    });
+    all.push(...response.results);
+    cursor = response.has_more ? response.next_cursor : undefined;
+  } while (cursor);
+  return all;
+}
 
-  return response.results.map((page: any) => ({
-    id: page.id,
-    title: getPropertyValue(page.properties["제목"]),
-    imageUrl: getPropertyValue(page.properties["이미지"]),
-    description: getPropertyValue(page.properties["설명"]),
-    order: getPropertyValue(page.properties["순서"]),
-  }));
+export async function getPhotos(): Promise<PhotoChapter[]> {
+  const results = await queryAll(
+    process.env.NOTION_PHOTOS_DS!,
+    { property: "공개", checkbox: { equals: true } },
+    [{ property: "순서", direction: "ascending" }]
+  );
+
+  const photos: (NotionPhoto & { chapter: string })[] = results.map(
+    (page: any) => ({
+      id: page.id,
+      title: getPropertyValue(page.properties["제목"]),
+      imageUrl: getPropertyValue(page.properties["이미지"]),
+      description: getPropertyValue(page.properties["설명"]),
+      location: getPropertyValue(page.properties["장소"]),
+      date: getPropertyValue(page.properties["촬영일"]),
+      order: getPropertyValue(page.properties["순서"]),
+      chapter: getPropertyValue(page.properties["챕터"]),
+    })
+  );
+
+  const grouped = new Map<string, NotionPhoto[]>();
+  for (const { chapter, ...photo } of photos) {
+    if (!chapter) continue;
+    if (!grouped.has(chapter)) grouped.set(chapter, []);
+    grouped.get(chapter)!.push(photo);
+  }
+
+  return Array.from(grouped.entries())
+    .map(([chapter, photos]) => ({ chapter, photos }))
+    .sort((a, b) => a.chapter.localeCompare(b.chapter));
 }

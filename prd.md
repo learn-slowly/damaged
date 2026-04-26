@@ -129,29 +129,33 @@ interface Project {
 
 ## 6. 개발 단계 (Phase)
 
-### Phase 0: 환경 설정
-- [ ] 프로젝트 초기화 (Next.js + TypeScript + Tailwind)
-- [ ] Vercel 배포 + damaged.kr 도메인 연결
-- [ ] 기본 폰트 설정 (한글 — Pretendard 또는 Noto Sans KR)
+### Phase 0: 환경 설정 ✅
+- [x] 프로젝트 초기화 (Next.js + TypeScript + Tailwind)
+- [x] Vercel 배포 + damaged.kr 도메인 연결 + SSL 인증서
+- [x] 기본 폰트 설정 (Noto Sans KR 300/400/500)
 
-### Phase 1: MVP — 서사 + 프로젝트
-- [ ] Hero 컴포넌트 (어두운 배경, "damaged." + 본명)
-- [ ] Story 컴포넌트 (병력 서사 텍스트, 스크롤 시 한 줄씩 나타남)
-- [ ] Projects 컴포넌트 (프로젝트 카드 6개, 스크롤 시 하나씩 등장)
-- [ ] Together 컴포넌트 (handson.ai.kr 연결)
-- [ ] Closing 컴포넌트 (닫는 문장)
-- [ ] 스크롤 애니메이션 (Intersection Observer 기반 fade-in)
-- [ ] 반응형 (모바일 우선)
+### Phase 1: MVP — 서사 + 프로젝트 ✅
+- [x] Hero 컴포넌트 (어두운 배경, "damaged." + 본명)
+- [x] Story 컴포넌트 (병력 서사 텍스트, 스크롤 시 한 줄씩 나타남)
+- [x] Projects 컴포넌트 (프로젝트 카드 9개, 스크롤 시 하나씩 등장)
+- [x] Together 컴포넌트 (handson.ai.kr 연결)
+- [x] Closing 컴포넌트 (닫는 문장 + 이메일)
+- [x] 스크롤 애니메이션 (Intersection Observer 기반 fade-in)
+- [x] 반응형 (모바일 우선)
+- [x] Notion CMS 연동 (프로젝트 DB, @notionhq/client v5)
+- [x] 프로젝트 스크린샷 9개 캡처 + Notion DB에 등록
+- [x] ISR 설정 (revalidate: 3600)
+- [x] GitHub repo (learn-slowly/damaged) + Vercel 자동 배포
 
 ### Phase 2: 사진 + 마감
-- [ ] Photos 컴포넌트 (사진 갤러리, 소수라도 배치)
-- [ ] 프로젝트 스크린샷 촬영 및 삽입
-- [ ] 메타 태그 (og:image, og:description)
+- [ ] Photos 컴포넌트에 실제 사진 추가 (Notion 사진 DB 연동은 완료)
+- [ ] 글 DB 연동 (확장용, 당장은 비워둬도 됨)
+- [ ] og:image 제작 및 삽입
 - [ ] 파비콘
 - [ ] 전체 톤 점검 및 마감
 
 ### Phase 3: 운영
-- [ ] 프로젝트 추가/수정 시 데이터만 업데이트
+- [ ] 프로젝트 추가/수정 시 Notion에서만 업데이트
 - [ ] 사진 추가 (꿈꽃팩토리 복귀 후)
 - [ ] 필요시 "글" 섹션 추가
 
@@ -214,7 +218,7 @@ BRCA 2 유전자 변이가 있다고 했다.
 멀리 가지 못하므로, 한 번 더 뒤돌아 봤다.
 그렇게 주운 것들이다.
 ```
-→ 사진 갤러리 (그리드 또는 가로 스크롤)
+→ 8개 챕터로 묶인 사진 (00 이스탄불 / 01 사람이 있는 풍경 / 02 일하는 사람들 / 03 빛과 그림자 / 04 쭈그려 앉기 / 05 상처난 것들과 사라져 가는 것들 / 06 자전거 / 07 셀카). 각 챕터는 번호+제목 헤더 + 사진 그리드(1·2·3열) + 각 사진 아래 `YYYY. M. 장소` 캡션. 사진은 Vercel Blob에 호스팅, Notion DB에 외부 URL로 등록.
 
 **[Closing]** —
 ```
@@ -278,8 +282,11 @@ BRCA 2 유전자 변이가 있다고 했다.
 | 제목 | Title | 사진 제목 (선택) |
 | 이미지 | Files | 사진 파일 |
 | 설명 | Text | 한 줄 캡션 (선택) |
+| 챕터 | Select | 00 이스탄불 / 01 사람이 있는 풍경 / 02 일하는 사람들 / 03 빛과 그림자 / 04 쭈그려 앉기 / 05 상처난 것들과 사라져 가는 것들 / 06 자전거 / 07 셀카 |
+| 장소 | Text | 촬영 장소 (예: "부산 다대포") |
+| 촬영일 | Date | 촬영 날짜 |
 | 공개 | Checkbox | 사이트에 표시 여부 |
-| 순서 | Number | 표시 순서 |
+| 순서 | Number | 챕터 내 표시 순서 |
 
 **글 DB** (추후 확장용)
 | 속성 | 타입 | 설명 |
@@ -303,12 +310,13 @@ BRCA 2 유전자 변이가 있다고 했다.
 
 ### 9.5 Phase 수정
 
-Phase 1에 추가:
-- [ ] Notion 데이터베이스 3개 생성 (프로젝트, 사진, 글)
-- [ ] Notion API 연동 (NOTION_API_KEY, DB ID 환경변수)
-- [ ] 프로젝트 데이터를 Notion에서 fetch
-- [ ] ISR 설정
+Phase 1에 추가: ✅ 완료
+- [x] Notion 데이터베이스 3개 생성 (프로젝트, 사진, 글)
+- [x] Notion API 연동 (@notionhq/client v5, dataSources.query)
+- [x] 프로젝트 데이터를 Notion에서 fetch
+- [x] ISR 설정 (revalidate: 3600)
+- [x] Vercel 환경변수 등록 (NOTION_API_KEY, NOTION_PROJECTS_DS, NOTION_PHOTOS_DS, NOTION_POSTS_DS)
 
 Phase 2에 추가:
-- [ ] 사진 DB 연동
+- [ ] 사진 DB에 사진 업로드 → Photos 컴포넌트에 반영
 - [ ] 글 DB 연동 (확장용, 당장은 비워둬도 됨)

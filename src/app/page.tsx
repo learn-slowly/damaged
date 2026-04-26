@@ -9,7 +9,7 @@ import { getProjects, getPhotos } from "@/lib/notion";
 export const revalidate = 3600;
 
 export default async function Home() {
-  const [projects, photos] = await Promise.all([getProjects(), getPhotos()]);
+  const [projects, photoChapters] = await Promise.all([getProjects(), getPhotos()]);
 
   return (
     <main>
@@ -17,7 +17,7 @@ export default async function Home() {
       <Story />
       <Projects projects={projects} />
       <Together />
-      <Photos photos={photos} />
+      <Photos chapters={photoChapters} />
       <Closing />
     </main>
   );
