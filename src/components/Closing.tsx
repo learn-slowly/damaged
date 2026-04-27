@@ -3,11 +3,7 @@
 import { useScrollRevealMultiple } from "@/hooks/useScrollReveal";
 
 const lines = [
-  "손상됐지만, 살아가야 한다.",
-  "유한한 것은, 모두가 동일하다.",
-  "그저 살아가야 하는 것도.",
-  "",
-  "— damaged",
+  "— damaged, but alive",
 ];
 
 export default function Closing() {
