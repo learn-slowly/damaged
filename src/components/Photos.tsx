@@ -106,11 +106,11 @@ function Lightbox({
           ›
         </button>
       )}
-      <div className="flex flex-1 items-center justify-center p-4 sm:p-12">
+      <div className="flex min-h-0 flex-1 items-center justify-center p-4 sm:p-12">
         <img
           src={photo.imageUrl}
           alt={photo.title || photo.description || ""}
-          className="max-h-full max-w-full cursor-zoom-out object-contain"
+          className="h-full w-full cursor-zoom-out object-contain"
         />
       </div>
       {cap && (
