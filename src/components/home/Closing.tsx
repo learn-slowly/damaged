@@ -3,8 +3,9 @@
 import { useScrollRevealMultiple } from "@/hooks/useScrollReveal";
 
 const monologue = [
-  "[ 출시 전 채울 자리 ]",
-  // 사용자가 직접 작성. 2~4줄. "but alive"에 대한 답·해석.
+  "누구나 다른 형태로 살아간다",
+  "living with damage",
+  "나 역시 그럴 뿐이다",
 ];
 
 export default function Closing() {
