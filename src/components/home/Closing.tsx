@@ -23,7 +23,7 @@ export default function Closing() {
             key={i}
             ref={setRef(i)}
             className={`reveal text-lg font-light leading-relaxed md:text-xl ${
-              line.serif ? "font-serif text-accent-gradient" : "text-foreground"
+              line.serif ? "font-serif text-accent-amber" : "text-foreground"
             }`}
             style={{ transitionDelay: `${i * 200}ms` }}
           >
