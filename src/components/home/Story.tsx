@@ -17,7 +17,7 @@ export default function Story() {
   return (
     <section className="flex min-h-screen flex-col items-center justify-center px-6">
       <p className="reveal mb-12 font-mono text-xs uppercase tracking-[0.25em] text-foreground-mute md:text-sm" ref={setRef(0)}>
-        / story
+        / coding start
       </p>
       <div className="max-w-[650px] space-y-4">
         {lines.map((line, i) =>
