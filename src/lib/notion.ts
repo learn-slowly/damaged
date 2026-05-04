@@ -35,6 +35,7 @@ export interface PhotoChapter {
 }
 
 function getPropertyValue(property: any): any {
+  if (!property) return "";
   switch (property.type) {
     case "title":
       return property.title.map((t: any) => t.plain_text).join("");
