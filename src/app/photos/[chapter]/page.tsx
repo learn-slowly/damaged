@@ -15,7 +15,8 @@ export default async function PhotoChapterPage({
 }: {
   params: Promise<{ chapter: string }>;
 }) {
-  const { chapter: slug } = await params;
+  const { chapter: rawSlug } = await params;
+  const slug = decodeURIComponent(rawSlug);
   const chapters = await getPhotos();
   const idx = chapters.findIndex((c) => chapterSlug(c.chapter) === slug);
   if (idx === -1) notFound();

@@ -15,7 +15,8 @@ export default async function WorkDetailPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params;
+  const { slug: rawSlug } = await params;
+  const slug = decodeURIComponent(rawSlug);
   const project = await getProject(slug);
   if (!project) notFound();
 
