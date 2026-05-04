@@ -41,16 +41,22 @@ export default function KenBurns({ src, alt, duration = 9000, className = "", pr
   }, [duration]);
 
   return (
-    <div className={`relative overflow-hidden ${className}`}>
-      <div ref={ref} className="absolute inset-0" style={{ transform: "scale(1.06)" }}>
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          priority={priority}
-          sizes="100vw"
-          className="object-cover"
-        />
+    <div className={`overflow-hidden ${className}`}>
+      <div className="relative h-full w-full">
+        <div
+          ref={ref}
+          className="absolute inset-0"
+          style={{ transform: "scale(1.06)" }}
+        >
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            priority={priority}
+            sizes="100vw"
+            className="object-cover"
+          />
+        </div>
       </div>
     </div>
   );
