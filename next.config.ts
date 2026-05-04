@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "prod-files-secure.s3.us-west-2.amazonaws.com" },
       { protocol: "https", hostname: "*.notion.so" },
+      { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
     ],
   },
 };
