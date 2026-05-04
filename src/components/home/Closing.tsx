@@ -2,10 +2,10 @@
 
 import { useScrollRevealMultiple } from "@/hooks/useScrollReveal";
 
-const monologue = [
-  "누구나 다른 형태로 살아간다",
-  "living with damage",
-  "나 역시 그럴 뿐이다",
+const monologue: { text: string; serif?: boolean }[] = [
+  { text: "누구나 다른 형태로 살아간다" },
+  { text: "living with damage", serif: true },
+  { text: "나 역시 그럴 뿐이다" },
 ];
 
 export default function Closing() {
@@ -22,10 +22,12 @@ export default function Closing() {
           <p
             key={i}
             ref={setRef(i)}
-            className="reveal text-lg font-light leading-relaxed text-foreground md:text-xl"
+            className={`reveal text-lg font-light leading-relaxed text-foreground md:text-xl ${
+              line.serif ? "font-serif" : ""
+            }`}
             style={{ transitionDelay: `${i * 200}ms` }}
           >
-            {line}
+            {line.text}
           </p>
         ))}
       </div>

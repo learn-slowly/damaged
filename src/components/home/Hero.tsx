@@ -18,7 +18,7 @@ export default function Hero() {
       </p>
 
       <h1 className="text-7xl tracking-tight text-foreground-strong md:text-[10rem]">
-        <BreathingType baseWeight={600} weightAmp={40}>damaged.</BreathingType>
+        <BreathingType baseWeight={600} weightAmp={40} className="font-serif">damaged.</BreathingType>
       </h1>
 
       <p

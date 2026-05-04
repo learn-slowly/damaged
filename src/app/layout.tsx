@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { pretendard, jetbrainsMono } from "@/lib/fonts";
+import { pretendard, jetbrainsMono, fraunces } from "@/lib/fonts";
 import LenisProvider from "@/components/layout/LenisProvider";
 import Grain from "@/components/layout/Grain";
 import "./globals.css";
@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html
       lang="ko"
-      className={`${pretendard.variable} ${jetbrainsMono.variable} antialiased`}
+      className={`${pretendard.variable} ${jetbrainsMono.variable} ${fraunces.variable} antialiased`}
     >
       <body className="font-sans">
         <Grain />

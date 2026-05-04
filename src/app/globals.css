@@ -32,6 +32,7 @@
 
   --font-sans: var(--font-pretendard);
   --font-mono: var(--font-jetbrains-mono);
+  --font-serif: var(--font-fraunces);
 }
 
 html, body {
