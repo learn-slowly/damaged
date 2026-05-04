@@ -14,7 +14,7 @@ export default function Hero() {
   return (
     <section className="relative flex min-h-screen flex-col items-center justify-center px-6">
       <p className="absolute right-6 top-6 font-mono text-xs uppercase tracking-[0.2em] text-foreground-mute md:text-sm">
-        / 백아형 · seoul · 2026
+        / 백아형 · yangsan · 2026
       </p>
 
       <h1 className="text-7xl tracking-tight text-foreground-strong md:text-[10rem]">
