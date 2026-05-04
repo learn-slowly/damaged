@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
-import { Noto_Sans_KR } from "next/font/google";
+import { pretendard, jetbrainsMono } from "@/lib/fonts";
+import LenisProvider from "@/components/layout/LenisProvider";
+import Grain from "@/components/layout/Grain";
 import "./globals.css";
-
-const notoSansKR = Noto_Sans_KR({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  variable: "--font-noto-sans-kr",
-});
 
 export const metadata: Metadata = {
   title: "damaged.",
@@ -23,12 +19,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ko" className={`${notoSansKR.variable} antialiased`}>
-      <body className="font-[var(--font-noto-sans-kr)]">{children}</body>
+    <html
+      lang="ko"
+      className={`${pretendard.variable} ${jetbrainsMono.variable} antialiased`}
+    >
+      <body className="font-sans">
+        <Grain />
+        <LenisProvider>{children}</LenisProvider>
+      </body>
     </html>
   );
 }
