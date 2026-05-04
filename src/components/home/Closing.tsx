@@ -22,8 +22,8 @@ export default function Closing() {
           <p
             key={i}
             ref={setRef(i)}
-            className={`reveal text-lg font-light leading-relaxed text-foreground md:text-xl ${
-              line.serif ? "font-serif" : ""
+            className={`reveal text-lg font-light leading-relaxed md:text-xl ${
+              line.serif ? "font-serif text-accent-gradient" : "text-foreground"
             }`}
             style={{ transitionDelay: `${i * 200}ms` }}
           >
