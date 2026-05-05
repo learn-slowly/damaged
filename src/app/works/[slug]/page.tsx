@@ -4,6 +4,7 @@ import BackNav from "@/components/layout/BackNav";
 import WorkHero from "@/components/works/WorkHero";
 import WorkBody from "@/components/works/WorkBody";
 import WorkPager from "@/components/works/WorkPager";
+import SwipeNav from "@/components/works/SwipeNav";
 
 export async function generateStaticParams() {
   const projects = await getProjects();
@@ -30,11 +31,16 @@ export default async function WorkDetailPage({
   const next = idx < allProjects.length - 1 ? allProjects[idx + 1] : null;
 
   return (
-    <main>
-      <BackNav trail="works" />
-      <WorkHero project={project} />
-      <WorkBody blocks={blocks} externalUrl={project.url} />
-      <WorkPager prev={prev} next={next} />
-    </main>
+    <SwipeNav
+      prevHref={prev ? `/works/${prev.slug}` : null}
+      nextHref={next ? `/works/${next.slug}` : null}
+    >
+      <main>
+        <BackNav trail="works" />
+        <WorkHero project={project} />
+        <WorkBody blocks={blocks} externalUrl={project.url} />
+        <WorkPager prev={prev} next={next} />
+      </main>
+    </SwipeNav>
   );
 }
