@@ -93,19 +93,21 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Props) 
       </button>
 
       <div
-        className="relative flex flex-1 items-center justify-center p-12"
+        className="relative flex flex-1 items-center justify-center p-4 md:p-12"
         onClick={(e) => e.stopPropagation()}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
-        <Image
-          src={photo.imageUrl}
-          alt={photo.title || ""}
-          width={1600}
-          height={1200}
-          className="max-h-full max-w-full object-contain"
-          sizes="100vw"
-        />
+        <div className="relative h-full w-full">
+          <Image
+            src={photo.imageUrl}
+            alt={photo.title || ""}
+            fill
+            sizes="100vw"
+            className="object-contain"
+            priority
+          />
+        </div>
       </div>
 
       {(photo.title || cap) && (
