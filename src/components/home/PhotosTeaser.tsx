@@ -8,7 +8,7 @@ import { useScrollRevealMultiple } from "@/hooks/useScrollReveal";
 import KenBurns from "@/components/shared/KenBurns";
 
 export default function PhotosTeaser({ chapters }: { chapters: PhotoChapter[] }) {
-  const heroChapters = chapters.filter((c) => c.heroPhoto?.isHero).slice(0, 2);
+  const heroChapters = chapters.filter((c) => c.heroPhoto?.isHero).slice(0, 1);
   const fallbackHero = heroChapters.length === 0 ? chapters.slice(0, 1) : [];
   const featured = [...heroChapters, ...fallbackHero];
   const featuredIds = new Set(featured.map((c) => c.chapter));
