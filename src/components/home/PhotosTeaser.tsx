@@ -22,11 +22,31 @@ export default function PhotosTeaser({ chapters }: { chapters: PhotoChapter[] })
     return m ? { number: m[1], title: m[2] } : { number: "", title: label };
   };
 
+  const introLines = [
+    "빨리 가지 못하므로, 자주 멈춰섰고,",
+    "멀리 가지 못하므로, 한 번 더 뒤돌아 봤다.",
+    "그렇게 주운 것들이다.",
+  ];
+
   return (
     <section className="relative px-0 py-32">
-      <p className="reveal mb-16 px-6 font-mono text-xs uppercase tracking-[0.25em] text-foreground-mute md:text-sm" ref={setRef(0)}>
-        / photos {String(chapters.length).padStart(2, "0")}
-      </p>
+      <div className="px-6 mb-16">
+        <p className="reveal mb-10 font-mono text-xs uppercase tracking-[0.25em] text-foreground-mute md:text-sm" ref={setRef(0)}>
+          / photos {String(chapters.length).padStart(2, "0")}
+        </p>
+        <div className="max-w-[650px] space-y-3">
+          {introLines.map((line, i) => (
+            <p
+              key={i}
+              ref={setRef(i + 1) as any}
+              className="reveal text-lg font-light leading-relaxed text-foreground md:text-xl"
+              style={{ transitionDelay: `${(i + 1) * 100}ms` }}
+            >
+              {line}
+            </p>
+          ))}
+        </div>
+      </div>
 
       {/* 풀블리드 히어로 챕터 */}
       <div className="space-y-2">
@@ -36,9 +56,9 @@ export default function PhotosTeaser({ chapters }: { chapters: PhotoChapter[] })
             <Link
               key={c.chapter}
               href={`/photos/${chapterSlug(c.chapter)}`}
-              ref={setRef(i + 1) as any}
+              ref={setRef(introLines.length + 1 + i) as any}
               className="reveal group relative block h-[80vh] w-full overflow-hidden"
-              style={{ transitionDelay: `${(i + 1) * 100}ms` }}
+              style={{ transitionDelay: `${(introLines.length + 1 + i) * 100}ms` }}
             >
               <KenBurns src={c.heroPhoto.imageUrl} alt={c.heroPhoto.title || c.chapter} className="absolute inset-0" />
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/80" />
@@ -79,9 +99,9 @@ export default function PhotosTeaser({ chapters }: { chapters: PhotoChapter[] })
             return (
               <li
                 key={c.chapter}
-                ref={setRef(featured.length + i + 1) as any}
+                ref={setRef(introLines.length + featured.length + 1 + i) as any}
                 className="reveal group"
-                style={{ transitionDelay: `${(featured.length + i + 1) * 80}ms` }}
+                style={{ transitionDelay: `${(introLines.length + featured.length + 1 + i) * 80}ms` }}
                 onMouseEnter={() => setHovered(c.chapter)}
                 onMouseLeave={() => setHovered((h) => (h === c.chapter ? null : h))}
               >
