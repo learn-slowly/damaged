@@ -29,12 +29,13 @@ export default function PhotosTeaser({ chapters }: { chapters: PhotoChapter[] })
   ];
 
   return (
-    <section className="relative px-0 py-32">
-      <div className="px-6 mb-16">
-        <p className="reveal mb-10 font-mono text-xs uppercase tracking-[0.25em] text-foreground-mute md:text-sm" ref={setRef(0)}>
+    <section className="relative px-0 pb-32">
+      {/* 인트로 — 풀스크린 한 호흡 */}
+      <div className="flex min-h-screen flex-col items-center justify-center px-6">
+        <p className="reveal mb-12 font-mono text-xs uppercase tracking-[0.25em] text-foreground-mute md:text-sm" ref={setRef(0)}>
           / photos {String(chapters.length).padStart(2, "0")}
         </p>
-        <div className="max-w-[650px] space-y-3">
+        <div className="max-w-[650px] space-y-4">
           {introLines.map((line, i) => (
             <p
               key={i}
