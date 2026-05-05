@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { type NotionPhoto } from "@/lib/notion";
 
@@ -22,6 +22,7 @@ function caption(date: string, location: string) {
 
 export default function Lightbox({ photos, index, onClose, onNavigate }: Props) {
   const photo = photos[index];
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -37,6 +38,23 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Props) 
       document.body.style.overflow = prevOverflow;
     };
   }, [onClose, onNavigate]);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    const t = e.touches[0];
+    touchStart.current = { x: t.clientX, y: t.clientY };
+  };
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (!touchStart.current) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStart.current.x;
+    const dy = t.clientY - touchStart.current.y;
+    touchStart.current = null;
+    // 가로 스와이프(50px 이상) + 세로 변동보다 가로 변동이 큰 경우만
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+      onNavigate(dx < 0 ? 1 : -1);
+    }
+  };
 
   if (!photo) return null;
   const cap = caption(photo.date, photo.location);
@@ -74,7 +92,12 @@ export default function Lightbox({ photos, index, onClose, onNavigate }: Props) 
         →
       </button>
 
-      <div className="relative flex flex-1 items-center justify-center p-12" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="relative flex flex-1 items-center justify-center p-12"
+        onClick={(e) => e.stopPropagation()}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
         <Image
           src={photo.imageUrl}
           alt={photo.title || ""}
