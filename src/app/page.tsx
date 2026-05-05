@@ -11,13 +11,10 @@ export default async function Home() {
 
   return (
     <main>
-      {/* Act 1 — 서사 */}
       <Hero />
       <Story />
-      <Together />
-
-      {/* Act 2 — 작업 */}
       <ProjectsList projects={projects} />
+      <Together />
       <PhotosTeaser chapters={chapters} />
       <Closing />
     </main>
